@@ -25,6 +25,7 @@ setup(
     entry_points={
         'console_scripts': [
             'barcode_node = cell_control.barcode_node:main',
+            'door_node = cell_control.door_node:main',
         ],
     },
 )
