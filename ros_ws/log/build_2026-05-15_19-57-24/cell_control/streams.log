@@ -1,0 +1,25 @@
+[0.383s] Invoking command in '/home/shirin/pick_cell_control/ros_ws/src/cell_control': PYTHONPATH=/home/shirin/pick_cell_control/ros_ws/build/cell_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/cell_control build --build-base /home/shirin/pick_cell_control/ros_ws/build/cell_control/build install --record /home/shirin/pick_cell_control/ros_ws/build/cell_control/install.log --single-version-externally-managed install_data
+[0.529s] running egg_info
+[0.529s] writing ../../build/cell_control/cell_control.egg-info/PKG-INFO
+[0.529s] writing dependency_links to ../../build/cell_control/cell_control.egg-info/dependency_links.txt
+[0.529s] writing entry points to ../../build/cell_control/cell_control.egg-info/entry_points.txt
+[0.529s] writing requirements to ../../build/cell_control/cell_control.egg-info/requires.txt
+[0.529s] writing top-level names to ../../build/cell_control/cell_control.egg-info/top_level.txt
+[0.529s] reading manifest file '../../build/cell_control/cell_control.egg-info/SOURCES.txt'
+[0.529s] writing manifest file '../../build/cell_control/cell_control.egg-info/SOURCES.txt'
+[0.529s] running build
+[0.529s] running build_py
+[0.529s] copying cell_control/door_node.py -> /home/shirin/pick_cell_control/ros_ws/build/cell_control/build/lib/cell_control
+[0.529s] running install
+[0.530s] running install_lib
+[0.530s] copying /home/shirin/pick_cell_control/ros_ws/build/cell_control/build/lib/cell_control/door_node.py -> /home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/python3.10/site-packages/cell_control
+[0.530s] byte-compiling /home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/python3.10/site-packages/cell_control/door_node.py to door_node.cpython-310.pyc
+[0.531s] running install_data
+[0.531s] running install_egg_info
+[0.532s] removing '/home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/python3.10/site-packages/cell_control-0.0.0-py3.10.egg-info' (and everything under it)
+[0.533s] Copying ../../build/cell_control/cell_control.egg-info to /home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/python3.10/site-packages/cell_control-0.0.0-py3.10.egg-info
+[0.533s] running install_scripts
+[0.547s] Installing barcode_node script to /home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/cell_control
+[0.547s] Installing door_node script to /home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/cell_control
+[0.547s] writing list of installed files to '/home/shirin/pick_cell_control/ros_ws/build/cell_control/install.log'
+[0.563s] Invoked command in '/home/shirin/pick_cell_control/ros_ws/src/cell_control' returned '0': PYTHONPATH=/home/shirin/pick_cell_control/ros_ws/build/cell_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/cell_control build --build-base /home/shirin/pick_cell_control/ros_ws/build/cell_control/build install --record /home/shirin/pick_cell_control/ros_ws/build/cell_control/install.log --single-version-externally-managed install_data

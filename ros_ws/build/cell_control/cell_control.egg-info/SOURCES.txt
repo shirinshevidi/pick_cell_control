@@ -10,6 +10,7 @@ setup.py
 ../../build/cell_control/cell_control.egg-info/zip-safe
 cell_control/__init__.py
 cell_control/barcode_node.py
+cell_control/door_node.py
 resource/cell_control
 test/test_copyright.py
 test/test_flake8.py
