@@ -26,12 +26,8 @@ setup(
         'console_scripts': [
             'barcode_node = cell_control.barcode_node:main',
             'door_node = cell_control.door_node:main',
-            'emergency_button_node = cell_control.emergency_button_node:main'
-<<<<<<< HEAD
-=======
-
-
->>>>>>> dc233984eee52ead47b34788427f6740276cc5ed
+            'emergency_button_node = cell_control.emergency_button_node:main',
+            'light_node = cell_control.light_node:main',
         ],
     },
 )
