@@ -1,0 +1,27 @@
+running egg_info
+writing ../../build/cell_control/cell_control.egg-info/PKG-INFO
+writing dependency_links to ../../build/cell_control/cell_control.egg-info/dependency_links.txt
+writing entry points to ../../build/cell_control/cell_control.egg-info/entry_points.txt
+writing requirements to ../../build/cell_control/cell_control.egg-info/requires.txt
+writing top-level names to ../../build/cell_control/cell_control.egg-info/top_level.txt
+reading manifest file '../../build/cell_control/cell_control.egg-info/SOURCES.txt'
+writing manifest file '../../build/cell_control/cell_control.egg-info/SOURCES.txt'
+running build
+running build_py
+copying cell_control/emergency_button_node.py -> /home/shirin/pick_cell_control/ros_ws/build/cell_control/build/lib/cell_control
+running install
+running install_lib
+copying /home/shirin/pick_cell_control/ros_ws/build/cell_control/build/lib/cell_control/emergency_button_node.py -> /home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/python3.10/site-packages/cell_control
+byte-compiling /home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/python3.10/site-packages/cell_control/emergency_button_node.py to emergency_button_node.cpython-310.pyc
+byte-compiling /home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/python3.10/site-packages/cell_control/__init__.py to __init__.cpython-310.pyc
+byte-compiling /home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/python3.10/site-packages/cell_control/door_node.py to door_node.cpython-310.pyc
+byte-compiling /home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/python3.10/site-packages/cell_control/barcode_node.py to barcode_node.cpython-310.pyc
+running install_data
+running install_egg_info
+removing '/home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/python3.10/site-packages/cell_control-0.0.0-py3.10.egg-info' (and everything under it)
+Copying ../../build/cell_control/cell_control.egg-info to /home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/python3.10/site-packages/cell_control-0.0.0-py3.10.egg-info
+running install_scripts
+Installing barcode_node script to /home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/cell_control
+Installing door_node script to /home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/cell_control
+Installing emergency_button_node script to /home/shirin/pick_cell_control/ros_ws/install/cell_control/lib/cell_control
+writing list of installed files to '/home/shirin/pick_cell_control/ros_ws/build/cell_control/install.log'
