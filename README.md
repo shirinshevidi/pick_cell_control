@@ -16,8 +16,6 @@ The implementation uses:
 - FastAPI
 - Plain HTML/CSS/JavaScript
 
-No real robot, camera, barcode scanner, or physical cell hardware is required. The robot picking process and hardware signals are simulated.
-
 ---
 
 ## 1. System Overview
@@ -96,9 +94,6 @@ pick_cell_control/
 
 File:
 
-```text
-api/api_wms.py
-```
 
 This simulates the Warehouse Management System.
 
@@ -124,21 +119,11 @@ Runs on:
 http://localhost:8081
 ```
 
-Swagger:
-
-```text
-http://localhost:8081/docs
-```
 
 ---
 
 ### 3.2 Cell API
 
-File:
-
-```text
-api/api_cell.py
-```
 
 This simulates the robotic cell API.
 
@@ -165,25 +150,12 @@ Runs on:
 http://localhost:8080
 ```
 
-Swagger:
-
-```text
-http://localhost:8080/docs
-```
 
 ---
 
 ### 3.3 Barcode Scanner Node
 
-File:
-
-```text
-ros_ws/src/cell_control/cell_control/barcode_node.py
-```
-
-This node simulates a barcode scanner.
-
-It publishes a random 5-digit barcode every second.
+This node simulates a barcode scanner. It publishes a random 5-digit barcode every second.
 
 ROS interface:
 
@@ -200,12 +172,6 @@ The service returns the latest generated barcode.
 ---
 
 ### 3.4 Door Node
-
-File:
-
-```text
-ros_ws/src/cell_control/cell_control/door_node.py
-```
 
 This node simulates the cell door.
 
@@ -231,12 +197,6 @@ The `/toggle_door` service switches the door state between open and closed.
 ---
 
 ### 3.5 Emergency Button Node
-
-File:
-
-```text
-ros_ws/src/cell_control/cell_control/emergency_node.py
-```
 
 This node simulates the emergency button.
 
@@ -264,11 +224,6 @@ false = emergency button not pressed
 
 ### 3.6 Stack-light Node
 
-File:
-
-```text
-ros_ws/src/cell_control/cell_control/stack_light_node.py
-```
 
 This node simulates the stack-light.
 
@@ -300,14 +255,6 @@ Emergency has priority over door state.
 ---
 
 ### 3.7 HMI
-
-Files:
-
-```text
-hmi/index.html
-hmi/style.css
-hmi/app.js
-```
 
 The HMI is a browser-based interface.
 
@@ -370,12 +317,6 @@ Plain HTML/CSS/JavaScript
 
 Install ROS 2 Humble on Ubuntu 22.04.
 
-After installation, verify that ROS 2 works:
-
-```bash
-ros2 --help
-```
-
 ### 5.2 Open the project folder
 
 ```bash
@@ -412,7 +353,7 @@ source install/setup.bash
 
 ## 6. How to Run the Full System
 
-The full system is started using separate terminals.
+The full system is started using separate terminals. Using Terminator is recommended. 
 
 ### Terminal 1: Barcode Node
 
@@ -479,159 +420,9 @@ http://localhost:3000
 
 ---
 
-## 7. API Usage
+## 7. Demo Scenario
 
-### 7.1 Send Pick Request
-
-Use the WMS API:
-
-```text
-POST http://localhost:8081/sendPick
-```
-
-Example request:
-
-```json
-{
-  "pickId": 101,
-  "quantity": 2
-}
-```
-
-Example successful response:
-
-```json
-{
-  "pickId": 101,
-  "pickSuccessful": true,
-  "errorMessage": null,
-  "itemBarcode": 12345
-}
-```
-
-The `itemBarcode` value comes from the ROS 2 barcode scanner node.
-
----
-
-### 7.2 Cell API State
-
-```text
-GET http://localhost:8080/state
-```
-
-Example response:
-
-```json
-{
-  "doorClosed": true,
-  "emergencyPressed": false,
-  "stackLight": 0
-}
-```
-
----
-
-### 7.3 Last Request
-
-```text
-GET http://localhost:8081/lastRequest
-```
-
----
-
-### 7.4 Last Confirmation
-
-```text
-GET http://localhost:8081/lastConfirmation
-```
-
----
-
-## 8. ROS 2 Testing Commands
-
-### Check all topics
-
-```bash
-ros2 topic list
-```
-
-Expected topics include:
-
-```text
-/barcode
-/door_closed
-/emergency_pressed
-/stack_light_state
-```
-
-### Check all services
-
-```bash
-ros2 service list
-```
-
-Expected services include:
-
-```text
-/get_latest_barcode
-/toggle_door
-/press_emergency
-/reset_emergency
-```
-
-### Echo barcode
-
-```bash
-ros2 topic echo /barcode
-```
-
-### Get latest barcode
-
-```bash
-ros2 service call /get_latest_barcode std_srvs/srv/Trigger
-```
-
-### Echo door state
-
-```bash
-ros2 topic echo /door_closed
-```
-
-### Toggle door
-
-```bash
-ros2 service call /toggle_door std_srvs/srv/Trigger
-```
-
-### Echo emergency state
-
-```bash
-ros2 topic echo /emergency_pressed
-```
-
-### Press emergency
-
-```bash
-ros2 service call /press_emergency std_srvs/srv/Trigger
-```
-
-### Reset emergency
-
-```bash
-ros2 service call /reset_emergency std_srvs/srv/Trigger
-```
-
-### Echo stack-light state
-
-```bash
-ros2 topic echo /stack_light_state
-```
-
----
-
-## 9. Demo Scenario
-
-### 9.1 Normal Picking
+### 7.1 Normal Picking
 
 Initial state:
 
@@ -743,31 +534,6 @@ FastAPI was used because it provides a simple way to create HTTP endpoints and a
 
 The HMI was implemented with plain HTML, CSS, and JavaScript. No external frontend framework was used.
 
-### Barcode Scanner
-
-The barcode scanner is simulated by generating a random 5-digit number every second.
-
-### Door
-
-The door is simulated with a boolean state.
-
-```text
-true  = door closed
-false = door open
-```
-
-The state can be changed using the `/toggle_door` ROS 2 service.
-
-### Emergency Button
-
-The emergency button is simulated with a boolean state.
-
-```text
-true  = emergency button pressed
-false = emergency button not pressed
-```
-
-The state can be changed using the `/press_emergency` and `/reset_emergency` ROS 2 services.
 
 ### Stack-light
 
@@ -783,7 +549,7 @@ Emergency has priority over the door state.
 
 ### HMI Control Buttons
 
-The HMI only displays the required system information and sends pick requests. It does not include door or emergency control buttons because this was not explicitly required. Door and emergency state changes are demonstrated using ROS 2 service calls.
+The HMI only displays the required system information and sends pick requests. It does not include door or emergency control buttons because this was not explicitly required. In a real robotic cell, the door state and emergency button state would normally be provided by physical hardware or the safety control system, not only manually controlled from the HMI. For this simulation, these hardware state changes are mocked using ROS 2 service calls.
 
 ---
 
@@ -796,12 +562,3 @@ The project was developed and tested directly on Ubuntu 22.04 with ROS 2 Humble.
 Docker can be added later as an optional improvement.
 
 ---
-
-## 12. Notes
-
-- The robot picking process is simulated.
-- No real robot hardware is used.
-- No real barcode scanner is used.
-- The barcode is randomly generated.
-- The HMI updates the displayed state repeatedly by polling the APIs.
-- The project should be run on Ubuntu 22.04 with ROS 2 Humble.
