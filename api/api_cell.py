@@ -2,6 +2,7 @@ from threading import Thread, Lock
 import time
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import requests
 
@@ -12,6 +13,13 @@ from std_srvs.srv import Trigger
 
 
 app = FastAPI(title="Robotic Cell API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class PickRequest(BaseModel):
