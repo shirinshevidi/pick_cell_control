@@ -1,11 +1,25 @@
+from threading import Thread, Lock
+import time
+
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import requests
-import random
-import time
+
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import Bool, Int32
+from std_srvs.srv import Trigger
 
 
 app = FastAPI(title="Robotic Cell API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class PickRequest(BaseModel):
@@ -20,16 +34,133 @@ class PickConfirmation(BaseModel):
     itemBarcode: int | None
 
 
-# Temporary fake states.
-# Later these will come from ROS 2 nodes.
-door_closed = True
-emergency_pressed = False
+class RosStateBridge(Node):
+    def __init__(self):
+        super().__init__("api_ros_state_bridge")
+
+        self.lock = Lock()
+
+        self.door_closed = True
+        self.emergency_pressed = False
+        self.stack_light_state = 0
+
+        self.create_subscription(
+            Bool,
+            "/door_close",
+            self.door_callback,
+            10,
+        )
+
+        self.create_subscription(
+            Bool,
+            "/emergency_pressed",
+            self.emergency_callback,
+            10,
+        )
+
+        self.create_subscription(
+            Int32,
+            "/stack_light_state",
+            self.stack_light_callback,
+            10,
+        )
+
+        self.barcode_client = self.create_client(
+            Trigger,
+            "/get_latest_barcode",
+        )
+
+        self.get_logger().info("API ROS state bridge started.")
+
+    def door_callback(self, msg):
+        with self.lock:
+            self.door_closed = msg.data
+
+    def emergency_callback(self, msg):
+        with self.lock:
+            self.emergency_pressed = msg.data
+
+    def stack_light_callback(self, msg):
+        with self.lock:
+            self.stack_light_state = msg.data
+
+    def get_current_state(self):
+        with self.lock:
+            return {
+                "doorClosed": self.door_closed,
+                "emergencyPressed": self.emergency_pressed,
+                "stackLight": self.stack_light_state,
+            }
+
+    def get_latest_barcode(self, timeout_seconds=3.0):
+        """
+        if not self.barcode_client.wait_for_service(timeout_sec=timeout_seconds):
+            return None
+            """
+
+        request = Trigger.Request()
+        future = self.barcode_client.call_async(request)
+
+        start_time = time.time()
+
+        while not future.done():
+            if time.time() - start_time > timeout_seconds:
+                return None
+            time.sleep(0.05)
+
+        response = future.result()
+
+        if response is None or not response.success:
+            return None
+
+        try:
+            return int(response.message)
+        except ValueError:
+            return None
+
+
+ros_bridge = None
+ros_thread = None
+
+
+@app.on_event("startup")
+def startup_event():
+    global ros_bridge
+    global ros_thread
+
+    if not rclpy.ok():
+        rclpy.init()
+
+    ros_bridge = RosStateBridge()
+
+    ros_thread = Thread(
+        target=rclpy.spin,
+        args=(ros_bridge,),
+        daemon=True,
+    )
+    ros_thread.start()
+
+
+@app.on_event("shutdown")
+def shutdown_event():
+    global ros_bridge
+
+    if ros_bridge is not None:
+        ros_bridge.destroy_node()
+
+    if rclpy.ok():
+        rclpy.shutdown()
 
 
 @app.post("/pick")
 def receive_pick_request(request: PickRequest):
     print("Received pick request:")
     print(request)
+
+    state = ros_bridge.get_current_state()
+
+    door_closed = state["doorClosed"]
+    emergency_pressed = state["emergencyPressed"]
 
     if emergency_pressed:
         confirmation = PickConfirmation(
@@ -51,14 +182,22 @@ def receive_pick_request(request: PickRequest):
         print(f"Fake picking {request.quantity} item(s)...")
         time.sleep(1)
 
-        fake_barcode = random.randint(10000, 99999)
+        latest_barcode = ros_bridge.get_latest_barcode()
 
-        confirmation = PickConfirmation(
-            pickId=request.pickId,
-            pickSuccessful=True,
-            errorMessage=None,
-            itemBarcode=fake_barcode,
-        )
+        if latest_barcode is None:
+            confirmation = PickConfirmation(
+                pickId=request.pickId,
+                pickSuccessful=False,
+                errorMessage="Could not read latest barcode from ROS2 scanner.",
+                itemBarcode=None,
+            )
+        else:
+            confirmation = PickConfirmation(
+                pickId=request.pickId,
+                pickSuccessful=True,
+                errorMessage=None,
+                itemBarcode=latest_barcode,
+            )
 
     try:
         response = requests.post(
@@ -78,51 +217,4 @@ def receive_pick_request(request: PickRequest):
 
 @app.get("/state")
 def get_state():
-    return {
-        "doorClosed": door_closed,
-        "emergencyPressed": emergency_pressed,
-        "stackLight": get_stack_light_state(),
-    }
-
-
-@app.post("/toggleDoor")
-def toggle_door():
-    global door_closed
-    door_closed = not door_closed
-
-    return {
-        "doorClosed": door_closed,
-        "message": "Door is now closed." if door_closed else "Door is now open.",
-    }
-
-
-@app.post("/pressEmergency")
-def press_emergency():
-    global emergency_pressed
-    emergency_pressed = True
-
-    return {
-        "emergencyPressed": emergency_pressed,
-        "message": "Emergency button has been pressed.",
-    }
-
-
-@app.post("/resetEmergency")
-def reset_emergency():
-    global emergency_pressed
-    emergency_pressed = False
-
-    return {
-        "emergencyPressed": emergency_pressed,
-        "message": "Emergency button has been reset.",
-    }
-
-
-def get_stack_light_state():
-    if emergency_pressed:
-        return -1
-
-    if not door_closed:
-        return 1
-
-    return 0
+    return ros_bridge.get_current_state()
