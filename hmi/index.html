@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bin Picking Cell HMI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <h1>Bin Picking Cell HMI</h1>
+
+        <section class="card">
+            <h2>Send Pick Request</h2>
+
+            <label for="pickId">Pick ID</label>
+            <input id="pickId" type="number" value="1001">
+
+            <label for="quantity">Quantity</label>
+            <input id="quantity" type="number" value="1">
+
+            <button onclick="sendPickRequest()">Send Pick Request</button>
+        </section>
+
+        <section class="grid">
+            <div class="card">
+                <h2>Cell State</h2>
+                <p><strong>Door:</strong> <span id="doorState">Unknown</span></p>
+                <p><strong>Emergency:</strong> <span id="emergencyState">Unknown</span></p>
+                <p><strong>Stack-light:</strong> <span id="stackLightText">Unknown</span></p>
+                <div id="stackLightShape" class="stack-light unknown"></div>
+            </div>
+
+            <div class="card">
+                <h2>Last Request</h2>
+                <pre id="lastRequest">No request yet</pre>
+            </div>
+
+            <div class="card">
+                <h2>Last Response</h2>
+                <pre id="lastResponse">No response yet</pre>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
